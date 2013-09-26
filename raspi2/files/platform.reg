@@ -1,0 +1,116 @@
+;
+; Copyright (c) Microsoft Corporation.  All rights reserved.
+;
+;
+; Use of this sample source code is subject to the terms of the Microsoft
+; license agreement under which you licensed this sample source code. If
+; you did not accept the terms of the license agreement, you are not
+; authorized to use this sample source code. For the terms of the license,
+; please see the license agreement between you and Microsoft or, if applicable,
+; see the LICENSE.RTF on your install media or the root of your tools installation.
+; THE SAMPLE SOURCE CODE IS PROVIDED "AS IS", WITH NO WARRANTIES OR INDEMNITIES.
+;
+
+; This file contains all platform-specific registry entries for the
+; BSP.  An example registry key is listed below.  The CESYSGEN and IF
+; conditional statements operate in an identical fashion to platform.bib.
+; Descriptions of these conditional mechanisms can be found in platform.bib.
+
+; @CESYSGEN IF CE_MODULES_DEVICE
+
+IF BSP_NOEXAMPLEREG !
+[HKEY_LOCAL_MACHINE\ExamplePath]
+    "ExampleString"="Hello"
+    "ExampleDword"=dword:1
+ENDIF BSP_NOEXAMPLEREG !
+
+; @CESYSGEN ENDIF CE_MODULES_DEVICE
+
+
+;------------ Display Driver -------------------------------------------------
+; @CESYSGEN IF CE_MODULES_DISPLAY
+IF BSP_NODISPLAY !
+
+IF BSP_NORASPIDISPLAY !
+[HKEY_LOCAL_MACHINE\Drivers\Display\raspiddibasic\Config]
+    "DisplayDll"="raspibasic_ddi.dll"
+
+[HKEY_LOCAL_MACHINE\System\GDI\Drivers]
+    "Display"="raspibasic_ddi.dll"
+
+; Settings to rotate the screen by 0 degrees clockwise upon download
+[HKEY_LOCAL_MACHINE\System\GDI\Rotation]
+    "Angle"=dword:0
+
+; GWES will pass this value to the Display driver; the driver will open the
+; key to which it points to read its configuration.
+[HKEY_LOCAL_MACHINE\System\GDI\DisplayCandidates]
+    "Candidate10"="Drivers\\Display\\raspiddibasic\\Config"
+
+; Let GWES save/restore video memory during suspend/resume
+[HKEY_LOCAL_MACHINE\SYSTEM\GWE]
+;   "PORepaint"=dword:0 - the display driver handles everything
+;   "PORepaint"=dword:1 - gwe should save and restore the bits
+;   "PORepaint"=dword:2 - gwe should invalidate and repaint
+;   "PORepaint"=dword:3 - gwe and driver need to save video memory
+    "PORepaint"=dword:1
+
+ENDIF BSP_NORASPIDISPLAY !
+
+ENDIF BSP_NODISPLAY !
+; @CESYSGEN ENDIF CE_MODULES_DISPLAY
+;-------------------------------------------------------------------------
+
+
+;------------ My customization -------------------------------------------------
+; Disable shell rect amimation 
+[HKEY_LOCAL_MACHINE\SYSTEM\GWE]
+	"Animate"=dword:0
+
+; This registry setting controls display of the Explorer's suspend menu button
+; To enable display of that button, comment out the next two lines.
+[HKEY_LOCAL_MACHINE\Explorer]
+    "Suspend"=dword:0
+
+
+; USB - DesignWare USB Host controller driver
+;Use the key below to auto load the USB Host driver on boot
+;[HKEY_LOCAL_MACHINE\Drivers\Builtin\DWCUsbHost]
+;Replace the key name above to allow the USB Host driver to be loaded by an app after boot for debugging
+[HKEY_LOCAL_MACHINE\Drivers\DWCUsbHost]
+   "Prefix"="HCD"
+   "Dll"="dwchci.dll"
+   "HcdCapability"=dword:4      ;HCD_SUSPEND_ON_REQUEST
+   "HcdPipeCache"=dword:8
+   "EnSoftRetry"=dword:0
+   "IClass"=multi_sz:"{7D96B50A-6BB5-4f64-ACD2-A0C3A45375FA}","{A32942B7-920C-486b-B0E6-92A702A99B35}" 
+
+; Placeholder for Network driver
+[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients\1060_60416\Default\Default\STDMICROETHCTLR]
+   "Prefix"="TST"
+   "Dll"="testdrv.dll"
+[HKEY_LOCAL_MACHINE\Drivers\USB\ClientDrivers\STDMICROETHCTLR]
+   "Prefix"="TST"
+   "Dll"="testdrv.dll"
+
+
+
+
+; Test driver
+[HKEY_LOCAL_MACHINE\Drivers\TestDrvr]
+   "Prefix"="TST"
+   "Dll"="testdrv.dll"
+
+; Test driver 1
+[HKEY_LOCAL_MACHINE\Drivers\DrvrTest]
+   "Prefix"="TST"
+   "Dll"="drvrtest.dll"
+
+; USB - default class driver for debugging
+[HKEY_LOCAL_MACHINE\Drivers\USB\LoadClients\Default\Default\Default\GenUSB]
+   "DLL"="GenUSB.DLL"
+
+; Simple USB driver
+[HKEY_LOCAL_MACHINE\Drivers\SimpleUSB]
+   "Prefix"="HCD"
+   "Dll"="simpusb.dll"

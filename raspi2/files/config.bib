@@ -1,0 +1,128 @@
+;
+; Copyright (c) Microsoft Corporation.  All rights reserved.
+;
+;
+; Use of this sample source code is subject to the terms of the Microsoft
+; license agreement under which you licensed this sample source code. If
+; you did not accept the terms of the license agreement, you are not
+; authorized to use this sample source code. For the terms of the license,
+; please see the license agreement between you and Microsoft or, if applicable,
+; see the LICENSE.RTF on your install media or the root of your tools installation.
+; THE SAMPLE SOURCE CODE IS PROVIDED "AS IS", WITH NO WARRANTIES OR INDEMNITIES.
+;
+
+;============================================================
+;============================================================
+; The MEMORY section defines the physical memory available on
+; the device and describes how that memory can be used.
+MEMORY
+
+; The table below defines how the operating system, including
+; BSP, drivers, and all other non-bootloader components,
+; will be laid out in memory by romimage.exe.  The RAMIMAGE
+; portion is the area available for the operating system code
+; and data.  The RAM potion is the area available for
+; allocations (stack or heap).  The ARGS region is
+; typically shared with the bootloader.  It is physical memory
+; reserved in a known location so the bootloader can pass
+; custom arguments to the operating system.
+;
+; The format of the table is:
+; <region name> <starting hex memory adress> <size in hex> <region type>
+;
+;
+; Use IMGFLASH to set a kernel that will be loaded from the SD card without
+; a bootloader.  IMGFLASH not defined configures NK to be downloaded via KITL
+;
+IF IMGFLASH !
+#define     NKSTART      80040000
+#define     NKLEN        02000000    ; 32MB (Max size. This will be auto-sized)
+#define     RAMSTART     82040000
+#define     RAMLEN       08000000    ; 128 Meg for a 192 Meg split system
+ELSE
+#define     NKSTART      80008000
+; Debug builds are larger so we need a bigger binary image
+#if "$(WINCEDEBUG)"=="debug"
+#define     NKLEN        02800000    ; 48MB (Max size. This will be auto-sized)
+#else
+#define     NKLEN        02000000    ; 32MB (Max size. This will be auto-sized)
+#endif
+#define     RAMSTART     82008000
+#define     RAMLEN       08000000    ; 128 Meg for a 192 Meg split system
+ENDIF
+
+;-----------------------------------------------------
+;   NAME        ADDRESS     SIZE            TYPE
+;-----------------------------------------------------
+    NK         $(NKSTART)  $(NKLEN)        RAMIMAGE
+    RAM        $(RAMSTART) $(RAMLEN)       RAM
+
+; Common RAM areas
+
+    IRQSTACK    80000000    00001000        RESERVED
+IF IMGFLASH  !   
+    SBOOT       80001000    0003e000        RESERVED
+    ARGS        8003f000    00001000        RESERVED
+ENDIF
+
+;NK Zones
+;DBGPARAM dpCurSettings = {
+;    TEXT("NK Kernel"), {
+;    TEXT("Schedule"),   TEXT("Memory"),    TEXT("ObjDisp"),   TEXT("Debugger"),
+;    TEXT("Security"), TEXT("Loader"),    TEXT("VirtMem"),   TEXT("Loader2"),
+;    TEXT("ThreadIDs"),  TEXT("MapFile"),   TEXT("PhysMem"),   TEXT("SEH"),
+;    TEXT("OpenExe"),    TEXT("Error"), TEXT("Paging"), TEXT("APIEntry") },
+;    0x2010         // Turn on bit 0 for schedule, 1 for memory, etc... (default: security and error)
+;//  0x51a0         // useful for VM debugging
+;//  0xdde6         // useful for when things don't even boot
+;//  0xc934         // useful for when things boot somewhat
+;//  0x4100
+;};
+
+; Fixup vars
+;   nk.exe:initialOALLogZones        00000000 0000ffff      FIXUPVAR
+;   kernel.dll:initialKernelLogZones 00000000 0000ffff      FIXUPVAR
+   kernel.dll:initialKernelLogZones 00000000 00000010      FIXUPVAR
+
+;============================================================
+;============================================================
+; The CONFIG section defines configuration options.  These are
+; options that are passed to romimage.exe.
+CONFIG
+
+; The specifies that writeable sequences in the MODULES section
+; will not be compressed.
+COMPRESSION=ON
+
+; This setting determines whether profiler structure and symbols
+; are included by the kernel.
+IF IMGPROFILER
+    PROFILE=ON
+ELSE
+    PROFILE=OFF
+ENDIF
+
+; This specifies that the writable sections of the kernel
+; are relocated to the start of RAM.  This needs to be on
+; since the kernel begins executing with the MMU off.
+KERNELFIXUPS=ON
+
+; This specifies that the RAM and RAMIMAGE memory sections
+; may have their boundary adjusted dynamically by romimage.exe
+; so that the RAMIMAGE section is just big enough to fit
+; the code and data, and the rest of the physical RAM is
+; available to the kernel as RAM for allocations.
+AUTOSIZE=ON
+
+;
+; Define the ROM values to setup .nb0 file which is a binary
+; image.  We use the .nb0 as our kernel.img
+;
+IF IMGFLASH 
+    ROMSTART = 80008000
+    ROMSIZE = $(NKLEN)
+    ROMWIDTH = 32
+ENDIF
+
+; Set memory division to ~15% for store and remainder for program RAM
+FSRAMPERCENT=0x25252525     

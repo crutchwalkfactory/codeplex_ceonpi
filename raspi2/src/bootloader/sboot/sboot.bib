@@ -1,0 +1,52 @@
+;
+; Copyright (c) Microsoft Corporation.  All rights reserved.
+;
+;
+; Use of this sample source code is subject to the terms of the Microsoft
+; license agreement under which you licensed this sample source code. If
+; you did not accept the terms of the license agreement, you are not
+; authorized to use this sample source code. For the terms of the license,
+; please see the license agreement between you and Microsoft or, if applicable,
+; see the LICENSE.RTF on your install media or the root of your tools installation.
+; THE SAMPLE SOURCE CODE IS PROVIDED "AS IS", WITH NO WARRANTIES OR INDEMNITIES.
+;
+
+
+MEMORY
+;----------------------------------------------------------------------
+;   NAME        ADDRESS     SIZE        TYPE
+;----------------------------------------------------------------------
+    SLDR        00008000    0001F000    RAMIMAGE        ; Image    : 124 KB 
+    RAM         00030000    0000C000    RAM             ; RAM      : 48 KB
+
+
+
+CONFIG
+
+    AUTOSIZE=OFF
+    COMPRESSION = OFF
+    PROFILE = OFF
+    KERNELFIXUPS = ON
+;IF BSP_IROMBOOT
+;    ROMOFFSET = F4000000
+;ENDIF
+
+    ;BOOTJUMP = NONE
+    RESETVECTOR = 00000000
+
+    ROMSTART = 00008000
+    ROMSIZE = 00020000
+    ROMWIDTH = 32
+;	ROMOFFSET = 00000000
+
+MODULES
+;   Name        Path                                                                                   Memory Type
+;   ----------  ----------------------------------------------------------------------------------     -----------
+    nk.exe      $(SG_OUTPUT_ROOT)\platform\$(_TGTPLAT)\target\$(_TGTCPU)\$(WINCEDEBUG)\sboot.exe     SLDR
+
+FILES
+;   Name        Path                                                                                   Memory Type
+;   ----------  ----------------------------------------------------------------------------------     -----------
+    font.bmp    $(_TARGETPLATROOT)\files\BootConsoleFont.8.bmp	                                     SLDR       U
+    
+

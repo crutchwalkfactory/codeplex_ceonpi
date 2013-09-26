@@ -1,0 +1,3 @@
+BUILD: [Thrd:Sequence:Type  ] Message
+BUILD: [01:0000000103:WARNN ] Warning(s) in directory "C:\WINCE700\platform\raspi2\src\bootloader\sloader\".
+BUILD: [01:0000000104:WARNN ] LINK : warning LNK4075: ignoring '/FIXED' due to '/PROFILE' specification

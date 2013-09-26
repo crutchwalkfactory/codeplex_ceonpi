@@ -1,0 +1,64 @@
+!if 0
+Copyright (c) Microsoft Corporation.  All rights reserved.
+!endif
+!if 0
+Use of this sample source code is subject to the terms of the Microsoft
+license agreement under which you licensed this sample source code. If
+you did not accept the terms of the license agreement, you are not
+authorized to use this sample source code. For the terms of the license,
+please see the license agreement between you and Microsoft or, if applicable,
+see the LICENSE.RTF on your install media or the root of your tools installation.
+THE SAMPLE SOURCE CODE IS PROVIDED "AS IS", WITH NO WARRANTIES OR INDEMNITIES.
+!endif
+# These indicate we're building oal.lib
+TARGETNAME=oal
+TARGETTYPE=LIBRARY
+
+#
+#this tells debug.c to use the video buffer as a debug output port until
+#kitl kicks in.  This helps with pre-kitl debugging as well as debugging
+#events that happen too fast for the serial KITL to keep up.
+#
+!IF "$(BSP_USEVIDASDEBUGPORT)" == "1"
+CDEFINES=$(CDEFINES) -DVIDEO_DEBUG_OUT=1
+!ENDIF
+
+#
+#If KITL is defined then we don't want to use the serial port for
+#sending out debug messages so we don't confuse the kitl transport protocol.
+#Also, enable video debug out. This prevents the developer from waiting at a blank
+#screen waiting for the system to boot when the system is waiting for PB to
+#connet.
+#
+!IF "$(IMGNOKITL)" == ""
+CDEFINES=$(CDEFINES) -DSERIAL_KITL=1
+CDEFINES=$(CDEFINES) -DVIDEO_DEBUG_OUT=1
+!ENDIF
+
+# Add public include paths
+INCLUDES=$(INCLUDES);$(_WINCEROOT)\public\common\oak\inc;$(_WINCEROOT)\public\common\sdk\inc
+
+# Add the floating point inc dir
+INCLUDES=$(INCLUDES);$(_PLATFORMROOT)\common\src\arm\common\vfp
+
+
+# The list of source files we're going to compile
+SOURCES= \
+    debug.c \
+    init.c \
+    intr.c \
+    ioctl.c \
+    memory.c \
+    power.c \
+    timer.c \
+    rtc.c \
+    vector.c \
+    ddi.c \
+
+
+ARM_SOURCES =    \
+    startup.s
+
+
+FILE_VIEW_ROOT_FOLDER= \
+

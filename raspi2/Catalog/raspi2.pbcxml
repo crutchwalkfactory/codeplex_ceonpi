@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CatalogFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" RequiredVersion="7.00" xmlns="urn:Microsoft.PlatformBuilder/Catalog">
+  <FileInformation Id="FileInformation:Boling Consulting Inc.:raspi2">
+    <Title>raspi2</Title>
+    <Description>raspi2 BSP Catalog Items</Description>
+    <Vendor>Boling Consulting Inc.</Vendor>
+    <OSVersion>7.00</OSVersion>
+    <FileVersion>0.1</FileVersion>
+  </FileInformation>
+  <Bsp Id="Bsp:Boling Consulting Inc.:raspi2:ARMV6">
+    <Title>raspi2: ARMV6</Title>
+    <Description>Raspberry Pi BSP based on BSP Template</Description>
+    <PlatformDirectory>raspi2</PlatformDirectory>
+    <CpuId>Cpu:ARMV6</CpuId>
+    <BspItemId>Item:Boling Consulting Inc.:BSPTemplateInstructions:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateBootloader:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateBootloader2:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateBSPConfigFiles:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateOAL:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateKITL:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TemplateStreamDriver:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TutorialPlatformCommon:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TutorialKitlEthernet:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TutorialKitlEthernetPlatformCommon:BSPTemplate_raspi2</BspItemId>
+    <BspItemId>Item:Boling Consulting Inc.:TutorialHALFlatDisplayDriver:BSPTemplate_raspi2</BspItemId>
+  </Bsp>
+  <Item Id="Item:Boling Consulting Inc.:BSPTemplateInstructions:BSPTemplate_raspi2">
+    <Title>!BSP Template Instructions - Start Here!</Title>
+    <Description>BSP Template Instructions</Description>
+    <Type>BspSpecific</Type>
+    <ChooseOneGroup>true</ChooseOneGroup>
+    <Location />
+    <SourceCode>
+      <Title>BSP TEMPLATE INSTRUCTIONS</Title>
+      <Path>$(_WINCEROOT)\PLATFORM\RASPI2\INSTRUCTIONS</Path>
+    </SourceCode>
+  </Item>
+  <Item Id="Item:Boling Consulting Inc.:TemplateKITL:BSPTemplate_raspi2">
+    <Title>Template KITL</Title>
+    <Description>KITL Template</Description>
+    <Type>BspSpecific</Type>
+    <ChooseOneGroup>true</ChooseOneGroup>
+    <Location />
+    <SourceCode>
+      <Title>TEMPLATE KITL SOURCE CODE</Title>
+      <Path>$(_WINCEROOT)\PLATFORM\RASPI2\SRC\KITL</Path>
+    </SourceCode>
+  </Item>
+</CatalogFile>
